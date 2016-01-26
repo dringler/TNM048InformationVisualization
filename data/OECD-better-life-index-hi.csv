@@ -1,4 +1,4 @@
-Country,Household income,Employment rate,Unemployment rate,Personal earnings,Quality of support network,Student skills,Water quality,Voter turnout,Self-reported health,Life satisfaction
+Country,HouseholdIncome,EmploymentRate,UnemploymentRate,PersonalEarnings,QualityOfSupportNetwork,StudentSkills,WaterQuality,VoterTurnout,Self-reportedHealth,LifeSatisfaction
 Australia,58409,84,0,53,55624,95,569,94,94,93,7,4
 Austria,52387,86,0,6,55997,97,548,97,90,82,7,8
 Belgium,47038,82,1,86,53577,93,576,80,98,87,7,5

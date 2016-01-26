@@ -39,7 +39,8 @@ function sp(){
         self.data = data;
         
         //define the domain of the scatter plot axes
-        //...
+        x.domain([0,d3.max(data, function(d) { return d.LifeSatisfaction; })])
+        y.domain([0,d3.max(data, function(d) { return d.HouseholdIncome; })])
         
         draw();
 
