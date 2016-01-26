@@ -10,7 +10,7 @@ function pc(){
 
     
     //initialize color scale
-    //...
+    var color = d3.scale.category20();
     
     //initialize tooltip
     //...
@@ -46,6 +46,12 @@ function pc(){
     });
 
     function draw(){
+
+        var cc = {};
+            self.data.forEach(function(d){
+                cc[d["Country"]] = color(d["Country"]);
+        })
+
         // Add grey background lines for context.
         background = svg.append("svg:g")
             .attr("class", "background")
@@ -65,6 +71,7 @@ function pc(){
             .data(self.data)
             .enter().append("path")
             .attr("d", path)
+            .style("stroke", function(d) {return cc[d.Country];})
             .on("mousemove", function(){})
             .on("mouseout", function(){});
 

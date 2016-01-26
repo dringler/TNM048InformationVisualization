@@ -9,7 +9,8 @@ function sp(){
         height = spDiv.height() - margin.top - margin.bottom;
 
     //initialize color scale
-    //...
+    var color = d3.scale.category20();
+
     
     //initialize tooltip
     //...
@@ -49,6 +50,13 @@ function sp(){
     function draw()
     {
         
+
+             var cc = {};
+             self.data.forEach(function(d){
+            cc[d["WaterQuality"]] = color(d["WaterQuality"]);
+        })
+
+
         // Add x axis and title.
         svg.append("g")
             .attr("class", "x axis")
@@ -80,9 +88,10 @@ function sp(){
             .enter().append("circle")
             .attr("class", "dot")
             //Define the x and y coordinate data values for the dots
-            .attr("r", function(d) { return x(d.PersonalEarnings/20); })
+            .attr("r", function(d) { return d.PersonalEarnings/10; })
             .attr("cx", function(d) { return x(d.LifeSatisfaction); })
             .attr("cy", function(d) { return y(d.HouseholdIncome); })
+            .style("fill", function(d) {return cc[d.WaterQuality]; })
 
 
             //tooltip
