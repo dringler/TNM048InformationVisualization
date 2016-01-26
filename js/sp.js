@@ -56,8 +56,10 @@ function sp(){
             .call(xAxis)
             .append("text")
             .attr("class", "label")
-            .attr("x", width)
-            .attr("y", -6);
+            .attr("x", width - 10)
+            .attr("y", -6)
+            .style("text-anchor", "middle")
+            .text("Life Satisfaction");
             
         // Add y axis and title.
         svg.append("g")
@@ -67,7 +69,10 @@ function sp(){
             .attr("class", "label")
             .attr("transform", "rotate(-90)")
             .attr("y", 6)
-            .attr("dy", ".71em");
+            .attr("x", -20)
+            .attr("dy", ".71em")
+            .style("text-anchor", "middle")
+            .text("Household Income");
             
         // Add the scatter dots.
         svg.selectAll(".dot")
