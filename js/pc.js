@@ -36,8 +36,7 @@ function pc(){
         self.data = data;
 
         // Extract the list of dimensions and create a scale for each.
-        //...
-        x.domain(dimensions = d3.keys([0,1,2,3,4]).filter(function(d) {
+        x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
             return [(y[d] = d3.scale.linear()
                 .domain(d3.extent([0,1]))
                 .range([height, 0]))];
