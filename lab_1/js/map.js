@@ -15,7 +15,9 @@ function map(){
     // var color = d3.scale.quantize();
  
     //initialize tooltip
-    //...
+    var div = d3.select("body").append("div")   
+        .attr("class", "tooltip")               
+        .style("opacity", 0);
 
     var projection = d3.geo.mercator()
         .center([50, 60 ])
@@ -36,11 +38,7 @@ function map(){
         console.log(world);
         var countries = topojson.feature(world, world.objects.countries).features;        
         //load summary data
-        //...
-
-
-
-         d3.csv("data/OECD-better-life-index-hi.csv", function(error, data) {
+        d3.csv("data/OECD-better-life-index-hi.csv", function(error, data) {
             
         // for (var i = 0; i < data.length; i++) {
         //         var dataCountry = data[i].Country;
@@ -75,31 +73,32 @@ function map(){
 
         //initialize a color country object	
         var cc = {};
-		// var currentColor = d3.rgb("blue");
-  //       //...
-  //       for (var i = 0; i < countries.length; i++) {
-  //           cc[i].countryName = countries[i].properties.name;
-  //           cc[i].color = currentColor.brighter;
 
-  //       }
-  data.forEach(function(d){
-    cc[d["Country"]] = color(d["Country"]);
-  })
+        data.forEach(function(d){
+            cc[d["Country"]] = color(d["Country"]);
+        })
 
         country.enter().insert("path")
             .attr("class", "country")
             .attr("d", path)
             .attr("id", function(d) { return d.id; })
-            .attr("title", function(d) { return d.properties.name; })
+            //.attr("title", function(d) { return d.properties.name; })
             //country color
             .style("fill", function(d) {return cc[d.properties.name];})
 
             //tooltip
             .on("mousemove", function(d) {
-                //...
-            })
-            .on("mouseout",  function(d) {
-                //...
+                div.transition()        
+                    .duration(200)      
+                    .style("opacity", .9);      
+                div .html(d.properties.name)  
+                    .style("left", (d3.event.pageX) + "px")     
+                    .style("top", (d3.event.pageY - 28) + "px");    
+            })        
+            .on("mouseout", function(d) {
+                div.transition()        
+                .duration(500)      
+                .style("opacity", 0);    
             })
             //selection
             .on("click",  function(d) {

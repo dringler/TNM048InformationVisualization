@@ -13,11 +13,12 @@ function pc(){
     var color = d3.scale.category20();
     
     //initialize tooltip
-    //...
-
+    var div = d3.select("body").append("div")   
+        .attr("class", "tooltip")               
+        .style("opacity", 0);
+    
     var x = d3.scale.ordinal().rangePoints([0, width], 1),
         y = {};
-        
 
     var line = d3.svg.line(),
         axis = d3.svg.axis().orient("left"),
@@ -72,8 +73,19 @@ function pc(){
             .enter().append("path")
             .attr("d", path)
             .style("stroke", function(d) {return cc[d.Country];})
-            .on("mousemove", function(){})
-            .on("mouseout", function(){});
+            .on("mousemove", function(d){
+                div.transition()        
+                    .duration(200)      
+                    .style("opacity", .9);      
+                div .html(d.Country)  
+                    .style("left", (d3.event.pageX) + "px")     
+                    .style("top", (d3.event.pageY - 28) + "px");    
+            })
+            .on("mouseout", function(){
+                div.transition()        
+                    .duration(500)      
+                    .style("opacity", 0);   
+            });
 
         // Add a group element for each dimension.
         var g = svg.selectAll(".dimension")
