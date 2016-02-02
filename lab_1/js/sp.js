@@ -108,8 +108,9 @@ function sp(){
                 .style("opacity", 0);    
             })
             .on("click",  function(d) {
-                pc1.selectLine(d);  
-                sp1.selectDot(d);
+                pc1.selectLine(d.Country);  
+                sp1.selectDot(d.Country);
+                map.selectCountry(d.Country);
             });
     }
 
@@ -118,7 +119,7 @@ function sp(){
     //method for selecting the dot from other components
     this.selectDot = function(value){
         svg.selectAll(".dot").style("opacity", function(d) {
-            if (d.Country != value.Country) {return 0.2} 
+            if (d.Country != value) {return 0.2} 
              else {return 1};
         })
     };

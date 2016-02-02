@@ -87,8 +87,9 @@ function pc(){
                     .style("opacity", 0);   
             })
             .on("click", function(d){
-                sp1.selectDot(d);
-                pc1.selectLine(d);
+                sp1.selectDot(d.Country);
+                pc1.selectLine(d.Country);
+                map.selectCountry(d.Country);
             });
 
         // Add a group element for each dimension.
@@ -136,7 +137,7 @@ function pc(){
     //method for selecting the pololyne from other components	
     this.selectLine = function(value){
         svg.selectAll("path").style("opacity", function(d) {
-            if (d.Country != value.Country) {return 0.2} 
+            if (d.Country != value) {return 0.2} 
              else {return 1};
         })
     };
