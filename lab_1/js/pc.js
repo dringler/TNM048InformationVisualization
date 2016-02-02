@@ -85,6 +85,10 @@ function pc(){
                 div.transition()        
                     .duration(500)      
                     .style("opacity", 0);   
+            })
+            .on("click", function(d){
+                sp1.selectDot(d);
+                pc1.selectLine(d);
             });
 
         // Add a group element for each dimension.
@@ -131,7 +135,10 @@ function pc(){
 
     //method for selecting the pololyne from other components	
     this.selectLine = function(value){
-        //...
+        svg.selectAll("path").style("opacity", function(d) {
+            if (d.Country != value.Country) {return 0.2} 
+             else {return 1};
+        })
     };
     
     //method for selecting features of other components
