@@ -1,5 +1,24 @@
 function pc(){
 
+    //get html input
+    var kUserInput = document.getElementById('kInputID').value;
+    var datasetUserInput = 0;
+    var radios = document.getElementsByName("dataset");
+    for(var i = 0; i < radios.length; i ++) {
+        if(radios[i].checked) {
+            datasetUserInput = i;
+            break;
+        }
+    }
+    var datasetCSV = "data/testData1_400x3_2-clusters.csv";
+    if (datasetUserInput == 1) {
+        datasetCSV = "data/testData2_400x3_2-clusters.csv";
+    }
+    if (datasetUserInput == 2) {
+        datasetCSV = "data/testData2_5600x5_x-clusters.csv";
+    }
+
+
     var self = this; // for internal d3 functions
 
     var pcDiv = $("#pc");
@@ -24,7 +43,7 @@ function pc(){
         .attr("transform", "translate(" + margin[3] + "," + margin[0] + ")");
 
     
-    d3.csv("data/testData1_400x3_2-clusters.csv", function(data) {
+    d3.csv(datasetCSV, function(data) {
         // Extract the list of dimensions and create a scale for each.
         x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
             return (y[d] = d3.scale.linear()
@@ -39,7 +58,7 @@ function pc(){
         
         self.data = data;
         
-        var k = 2;
+        var k = kUserInput;
         var kmeansRes = kmeans(data,k);
         
         //initialize the cluster colors
