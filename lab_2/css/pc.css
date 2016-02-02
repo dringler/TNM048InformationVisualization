@@ -11,7 +11,7 @@ svg {
 
 .foreground path {
     fill: none;
-    stroke: steelblue;
+    stroke: grey;
     stroke-opacity: .2;
     stroke-width: 3px !important;
 }

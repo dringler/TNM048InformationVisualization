@@ -28,8 +28,7 @@ function pc(){
         height = pcDiv.height() - margin[0] - margin[2];
 
     var x = d3.scale.ordinal().rangePoints([0, width], 1),
-        y = {};
-        
+        y = {}; 
 
     var line = d3.svg.line(),
         axis = d3.svg.axis().orient("left"),
@@ -60,14 +59,14 @@ function pc(){
         
         var k = kUserInput;
         var kmeansRes = kmeans(data,k);
-        
-        //initialize the cluster colors
-        //...
-        
+
         draw(kmeansRes);
     });
 
     function draw(kmeansRes){
+        //initialize the cluster colors
+        var color = d3.scale.category10();
+        var cValue = function(d) { return d.centroid;};
         
         // Add grey background lines for context.
         background = svg.append("svg:g")
@@ -84,10 +83,10 @@ function pc(){
             .data(self.data)
             .enter().append("svg:path")
             .attr("d", path)
-            .style("stroke", function(d) { return "hsl(" + Math.random() * 360 + ",100%,50%)"; }); 
+            // .style("stroke", function(d) { return "hsl(" + Math.random() * 360 + ",100%,50%)"; }); 
     
             //Assign the cluster colors
-            //..
+            .style("fill", function(d) { return color(cValue(d));}) 
     
 
         // Add a group element for each dimension.

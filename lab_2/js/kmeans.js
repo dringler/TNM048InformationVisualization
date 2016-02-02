@@ -8,14 +8,8 @@
 
     function kmeans(data, k) {
         
+        //dimension variables
         keys = d3.keys(data[0]);
-        console.log(keys);
-    	//data = Array[i] with Objects
-    	// i.A, i.B, i.C
-    	// console.log(data);
-    	// console.log(data[5]);
-    	// console.log(data[5].A);
-
 
     	//initial variables
     	var threshold = 0;
@@ -25,12 +19,11 @@
 
     	//1. chose initial centroids
     	//array for the centroids
+    	console.log("initial centroid data points");
     	var centroids = [];
     	for (i = 0; i < k; i++) {
     		//get random centroids out of the data values
     		centroids[i] = data[(Math.floor(Math.random() * data.length))];
-    		console.log("initial centroid data points");
-    		console.log(i);
     		console.log(centroids[i]);
 
     	}
@@ -38,11 +31,13 @@
     	//2. assign each point in the data to the nearest centroid
     	//array containing all data points assigned to a centroid
     	while(improvingCentroids) {
+    		//for all clusters
 	    	for (i = 0; i < k; i++) {
+	    		//for all data items
 	    		for (j = 0; j < data.length; j++) {
 					//calculate distance
 					//initial distances for first centroid
-					if (i == 0) {
+					if (i == 0 && !notFirstRound) {
 						data[j].distance = euclideanDistance(data[j], centroids[i]);
 						data[j].centroid = i;
 					//check if distance to centroid i is closer
@@ -90,17 +85,15 @@
 	    			}
 	    			//add sum for each dimension to the sumArray
 	    			sumArray.push(dimSum);
-	    			// console.log(sumArray);
 
 	    			//calculate new centroid position
 	    			var currentC = centroids[i];
 	    			currentC[dim] = dimSum / centroidDataPoints.length;
 
-
 	    		}
-	    		console.log("new centroid data points");
-	    		console.log(i);
-	    		console.log(centroids[i]);
+	    		// console.log("new centroid data points");
+	    		// console.log(i);
+	    		// console.log(centroids[i]);
 	    	}
 
 	    	//4. check quality of the clusters
@@ -110,10 +103,10 @@
 	    		newClusterSSE.push(sse(data, centroids, i));
 	    	}
 
-	    	console.log("currentClusterSSE");
-	    	console.log(currentClusterSSE);
-	    	console.log("newClusterSSE");
-	    	console.log(newClusterSSE);
+	    	// console.log("currentClusterSSE");
+	    	// console.log(currentClusterSSE);
+	    	// console.log("newClusterSSE");
+	    	// console.log(newClusterSSE);
 	    	//check quality compared to previous clusters
 	    	if (notFirstRound) {
 		    	for (i = 0; i < k; i++) {
@@ -131,16 +124,20 @@
 		    	notFirstRound = true;
 		    	currentClusterSSE = newClusterSSE;
 		    }
-	    	console.log("voteAbort");
-	    	console.log(voteAbort);
+	    	// console.log("voteAbort");
+	    	// console.log(voteAbort);
 	    	//check if all centroids voted abort
 	    	if(voteAbort.indexOf(0) == -1 && voteAbort.length != 0) {
 	    		//break while loop for improving the centroids
 	    		improvingCentroids = false;
 	    	}
 	    }
-
+	    // console.log("FINAL DATA");
+	    // console.log(data);
+	    return data;
     };
+
+
     function euclideanDistance(dataitem, centroid) {
     	var distance = 0;
     	var sqrtDistance = 0;
