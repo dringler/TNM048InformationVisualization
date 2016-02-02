@@ -39,7 +39,7 @@ function pc(){
         
         self.data = data;
         
-        var k = 0;
+        var k = 2;
         var kmeansRes = kmeans(data,k);
         
         //initialize the cluster colors
