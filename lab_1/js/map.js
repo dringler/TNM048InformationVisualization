@@ -102,7 +102,9 @@ function map(){
             })
             //selection
             .on("click",  function(d) {
-                sp1.selectDot(d.properties.name);
+                var countryArray = [];
+                countryArray.push(d.Country);
+                sp1.selectDot(countryArray);
                 pc1.selectLine(d.properties.name);
                 map.selectCountry(d.properties.name);            
             });
@@ -123,7 +125,7 @@ function map(){
 
         this.selectCountry = function(value){
         svg.selectAll("path").style("opacity", function(d) {
-            if (d.properties.name != value) {return 0.2} 
+            if (value.indexOf(d.properties.name) == -1) {return 0.2} 
              else {return 1};
         })
     };

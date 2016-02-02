@@ -108,9 +108,11 @@ function sp(){
                 .style("opacity", 0);    
             })
             .on("click",  function(d) {
+                var countryArray = [];
+                countryArray.push(d.Country);
+                sp1.selectDot(countryArray);
                 pc1.selectLine(d.Country);  
-                sp1.selectDot(d.Country);
-                map.selectCountry(d.Country);
+                map.selectCountry(countryArray);
             });
     }
 
@@ -119,7 +121,7 @@ function sp(){
     //method for selecting the dot from other components
     this.selectDot = function(value){
         svg.selectAll(".dot").style("opacity", function(d) {
-            if (d.Country != value) {return 0.2} 
+            if (value.indexOf(d.Country) == -1) {return 0.2} 
              else {return 1};
         })
     };

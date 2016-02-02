@@ -87,9 +87,11 @@ function pc(){
                     .style("opacity", 0);   
             })
             .on("click", function(d){
-                sp1.selectDot(d.Country);
-                pc1.selectLine(d.Country);
-                map.selectCountry(d.Country);
+                var countryArray = [];
+                countryArray.push(d.Country);
+                sp1.selectDot(countryArray);
+                pc1.selectLine(d.Country);  
+                map.selectCountry(countryArray);
             });
 
         // Add a group element for each dimension.
@@ -125,13 +127,18 @@ function pc(){
 
     // Handles a brush event, toggling the display of foreground lines.
     function brush() {
+        var selectedLines = [];
         var actives = dimensions.filter(function(p) { return !y[p].brush.empty(); }),
             extents = actives.map(function(p) { return y[p].brush.extent(); });
         foreground.style("display", function(d) {
             return actives.every(function(p, i) {
+                if(extents[i][0] <= d[p] && d[p] <= extents[i][1]) {selectedLines.push(d["Country"])}
                 return extents[i][0] <= d[p] && d[p] <= extents[i][1];
             }) ? null : "none";
         });
+        sp1.selectDot(selectedLines);
+        map.selectCountry(selectedLines);
+
     }
 
     //method for selecting the pololyne from other components	
