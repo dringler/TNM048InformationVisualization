@@ -64,7 +64,7 @@ function map(data) {
                 "type" : "Feature",
                 "geometry": {
                     "type": "Point",
-                    "coordinates": [parseFloat(array[i].lat), parseFloat(array[i].lon)]
+                    "coordinates": [parseFloat(array[i].lon), parseFloat(array[i].lat)]
                 },
                 "properties": {
                     "id" : array[i].id,
@@ -93,7 +93,15 @@ function map(data) {
                 .style("stroke", "white");
 
         //draw point        
-        var point //Complete the code
+        var point = g.selectAll("circle")
+            .data(geoData.features)
+            .enter()
+            .append("circle")
+            .attr("cx", function(d) { return projection(d.geometry.coordinates)[0];})
+            .attr("cy", function(d) { return projection(d.geometry.coordinates)[1]; })
+            .attr("r", 5)
+            .style("fill", "red")
+            .classed("pin", true);
     };
 
     //Filters data points according to the specified magnitude
