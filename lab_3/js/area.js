@@ -2,6 +2,7 @@
 //http://bl.ocks.org/mbostock/1667367
 
 function area(data) {
+    var data = data;
     var areaDiv = $("#area");
 
     var margin = {top: 100, right: 40, bottom: 100, left: 40},
@@ -11,8 +12,7 @@ function area(data) {
             height2 = areaDiv.height() - margin2.top - margin2.bottom;
 
     //Sets the data format
-    var format = d3.time.format.utc("");//Complete the code
-
+    var format = d3.time.format("%Y-%m-%dT%H:%M:%S.%LZ");
     //Sets the scales 
     var x = d3.time.scale().range([0, width]),
             x2 = d3.time.scale().range([0, width]),
@@ -33,22 +33,22 @@ function area(data) {
     var area = d3.svg.area()
             .interpolate("step")
             .x(function (d) {
-                return 10;//Complete the code
+                return x(format.parse(d.time));
             })
             .y0(height)
             .y1(function (d) {
-                return 10;//Complete the code
+                return y(d.mag);
             });
     
     //Creates the small chart        
         var area2 = d3.svg.area()
             .interpolate("step")
             .x(function (d) {
-                return 10;//Complete the code
+                return x2(format.parse(d.time));
             })
             .y0(height2)
             .y1(function (d) {
-                return 10;//Complete the code
+                return y2(d.mag);
             });
     
     //Assings the svg canvas to the area div
@@ -72,8 +72,8 @@ function area(data) {
             .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
     //Initializes the axis domains for the big chart
-    x.domain([10,10]);//Complete the code
-    y.domain([4, 10]);//Complete the code
+    x.domain(d3.extent(data.map(function(d){return format.parse(d.time)})));
+    y.domain([0, d3.max(data.map(function(d){return d.mag}))]);
     //Initializes the axis domains for the small chart
     x2.domain(x.domain());
     y2.domain(y.domain());
@@ -114,8 +114,6 @@ function area(data) {
             .attr("y", -6)
             .attr("height", height2 + 7);
     
-  
-     
 
     //Method for brushing
     function brush() {
