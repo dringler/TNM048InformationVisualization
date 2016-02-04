@@ -106,7 +106,15 @@ function map(data) {
 
     //Filters data points according to the specified magnitude
     function filterMag(value) {
-        //Complete the code
+        svg.selectAll("circle")
+            .style("opacity", function(d){
+                if (value > d.properties.mag) {return 0.1}
+                else {return 1};
+            })
+            .style("fill", function(d) {
+                if(value > d.properties.mag) {return "black"}
+                    else {return "red"}
+            })
     }
     
     //Filters data points according to the specified time window
