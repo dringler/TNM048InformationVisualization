@@ -102,29 +102,32 @@ function map(data) {
             .attr("r", 5)
             .style("fill", "red")
             .classed("pin", true);
+        map1.cluster();
     };
 
     //Filters data points according to the specified magnitude
     function filterMag(value) {
         svg.selectAll("circle")
             .style("opacity", function(d){
-                if (value > d.properties.mag) {return 0.1}
+                if (value > d.properties.mag) {return 0}
                 else {return 1};
-            })
-            .style("fill", function(d) {
-                if(value > d.properties.mag) {return "black"}
-                    else {return "red"}
             })
     }
     
     //Filters data points according to the specified time window
     this.filterTime = function (value) {
-        //Complete the code
+        svg.selectAll("circle").style("opacity", function(d){
+        var date = new Date(d.properties.time)    
+            if (value[0].getTime() <= date.getTime() && date.getTime() <= value[1].getTime()) {return 1}
+            else {return 0};
+        })
     };
 
     //Calls k-means function and changes the color of the points  
     this.cluster = function () {
-        //Complete the code
+        //get k value
+        var k = document.getElementById('k').value;
+        
     };
 
     //Zoom and panning method
