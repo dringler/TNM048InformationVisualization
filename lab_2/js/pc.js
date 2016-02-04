@@ -86,7 +86,7 @@ function pc(){
             // .style("stroke", function(d) { return "hsl(" + Math.random() * 360 + ",100%,50%)"; }); 
     
             //Assign the cluster colors
-            .style("fill", function(d) { return color(cValue(d));}) 
+            .style("stroke", function(d) { return color(cValue(d));}) 
     
 
         // Add a group element for each dimension.
