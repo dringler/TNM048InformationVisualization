@@ -19,12 +19,12 @@
 
     	//1. chose initial centroids
     	//array for the centroids
-    	console.log("initial centroid data points");
+    	// console.log("initial centroid data points");
     	var centroids = [];
     	for (i = 0; i < k; i++) {
     		//get random centroids out of the data values
     		centroids[i] = data[(Math.floor(Math.random() * data.length))];
-    		console.log(centroids[i]);
+    		// console.log(centroids[i]);
 
     	}
 
