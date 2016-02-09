@@ -122,5 +122,6 @@ function area(data) {
         focus.select(".x.axis").call(xAxis);
 
         map1.filterTime(brush.extent());
+        // map1.cluster();
     }
 }

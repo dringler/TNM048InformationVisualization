@@ -1,4 +1,10 @@
+var gMag = 0;
+var gStartTime = 0;
+var gEndTime = 0;
+var gData = [];
+
 function map(data) {
+    gData = data;
 
     var zoom = d3.behavior.zoom()
             .scaleExtent([0.5, 8])
@@ -41,8 +47,7 @@ function map(data) {
 
     //Formats the data in a feature collection trougth geoFormat()
     var geoData = {type: "FeatureCollection", features: geoFormat(data)};
-    console.log("geoData");
-    console.log(geoData);
+
     //Loads geo data
     d3.json("data/world-topo.json", function (error, world) {
         var countries = topojson.feature(world, world.objects.countries).features;
@@ -102,11 +107,11 @@ function map(data) {
             .attr("r", 5)
             .style("fill", "red")
             .classed("pin", true);
-        map1.cluster();
     };
 
     //Filters data points according to the specified magnitude
     function filterMag(value) {
+        gMag = value;
         svg.selectAll("circle")
             .style("opacity", function(d){
                 if (value > d.properties.mag) {return 0}
@@ -116,6 +121,8 @@ function map(data) {
     
     //Filters data points according to the specified time window
     this.filterTime = function (value) {
+        gStartTime = value[0].getTime();
+        gEndTime = value[1].getTime();
         svg.selectAll("circle").style("opacity", function(d){
         var date = new Date(d.properties.time)    
             if (value[0].getTime() <= date.getTime() && date.getTime() <= value[1].getTime()) {return 1}
@@ -125,9 +132,37 @@ function map(data) {
 
     //Calls k-means function and changes the color of the points  
     this.cluster = function () {
+        var color = d3.scale.category10();
+        var cValue = function(d) {
+            return d.properties.assignment;
+        };
+        //reset global data array with filtered data
+        gData = [];
+        //add all data to the global data array which is not filtered out 
+        for (j=0; j < data.length; j++) {
+            var dTime = new Date(data[j].time);
+            var dMag = data[j].mag;
+            //make data array with selected values
+            if ((gStartTime == 0 || dTime.getTime() >= gStartTime) && 
+                    (gEndTime == 0 || dTime.getTime() <= gEndTime) && 
+                    (dMag >= gMag || gMag == 0) ) {
+                gData.push(data[j]);
+            }
+        }
+
         //get k value
         var k = document.getElementById('k').value;
-        
+        var kmeansRes = kmeans(gData,k);
+
+        for (j=0; j<geoData.features.length; j++) {
+            geoData.features[j].properties.assignment = kmeansRes.assignments[j];
+        }
+
+
+
+        svg.selectAll("circle").style("fill", function(d) {
+            return color(cValue(d));
+        })   
     };
 
     //Zoom and panning method
