@@ -103,7 +103,7 @@ function map(){
             //selection
             .on("click",  function(d) {
                 var countryArray = [];
-                countryArray.push(d.Country);
+                countryArray.push(d.properties.name);
                 sp1.selectDot(countryArray);
                 pc1.selectLine(d.properties.name);
                 map.selectCountry(d.properties.name);            
