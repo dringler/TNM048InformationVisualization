@@ -73,7 +73,7 @@ function area(data) {
 
     //Initializes the axis domains for the big chart
     x.domain(d3.extent(data.map(function(d){return format.parse(d.time)})));
-    y.domain([0, d3.max(data.map(function(d){return d.mag}))]);
+    y.domain(d3.extent(data.map(function(d){return d.mag})));
     //Initializes the axis domains for the small chart
     x2.domain(x.domain());
     y2.domain(y.domain());

@@ -155,8 +155,13 @@ function map(data) {
         var kmeansRes = kmeans(gData,k);
 
         for (j=0; j<geoData.features.length; j++) {
-            geoData.features[j].properties.assignment = kmeansRes.assignments[j];
+            for (m=0; m<kmeansRes.points.length; m++) {
+                if (geoData.features[j].properties.id == kmeansRes.points[m][2]) {
+                    geoData.features[j].properties.assignment = kmeansRes.assignments[m];
+                }
+            }
         }
+
 
 
 

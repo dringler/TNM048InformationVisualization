@@ -39,6 +39,7 @@
         return {
             means: means,
             assignments: assignments,
+            points: points,
             steps: n,
             k: k
         };
@@ -60,6 +61,7 @@
 //            values.push(parseFloat(data[row]["lon"]));
             values.push(parseFloat(data[row]["mag"]));
             values.push(parseFloat(data[row]["depth"]));
+            values.push(parseInt(data[row]["id"]));
             points.push(values);
         }    
         return points;
