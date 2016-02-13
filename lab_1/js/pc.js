@@ -75,10 +75,10 @@ function pc(){
             .style("stroke", function(d) {return cc[d.Country];})
             .on("mousemove", function(d){
                 div.transition()        
-                    .duration(200)      
+                    .duration(1)      
                     .style("opacity", .9);      
                 div .html(d.Country)  
-                    .style("left", (d3.event.pageX) + "px")     
+                    .style("left", (d3.event.pageX + 5) + "px")     
                     .style("top", (d3.event.pageY - 28) + "px");    
             })
             .on("mouseout", function(){

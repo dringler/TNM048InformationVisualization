@@ -26,7 +26,8 @@ function map(){
     var svg = d3.select("#map").append("svg")
         .attr("width", width)
         .attr("height", height)
-        .call(zoom);
+        .call(zoom)
+        .attr("transform","translate(100,50)scale(.4,.4)");
 
     var path = d3.geo.path()
         .projection(projection);
