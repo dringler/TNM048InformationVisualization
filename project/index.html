@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/colorbrewer.css">
+
+        <!--modules css-->
+        <link rel="stylesheet" href="css/pc.css">
+        
+
+    </head>
+    <body onload="dmAclick(); init();">
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Wrap all page content here -->
+        <div id="wrap">
+
+            <!-- Fixed navbar -->
+            <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">Final Project Daniel Ringler</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Begin page content -->
+            <div class="container">
+                <!-- row of columns -->
+                <br><br><br>
+                 <div class="input">
+                    <form>
+                        dataset: <br>
+                        <input type="radio" name="dataset" id="datasetSampleID" value="sample" checked>sample<br>
+                        <input type="radio" name="dataset" id="datasetFullID" value="full">full<br>
+                        data mining algorithm: <br>
+                        <input type="radio" name="dmA" id="birchID" value="birch" onclick="dmAclick()" checked>BIRCH<br>
+                        <p id="birch">
+                            threshold: 
+                            <input type="number" id= "birchThID" name="birchTh" value=0.5> <br>
+                            branching_factor: 
+                            <input type="number" id= "birchBfID" name="birchBf" value=50> <br>
+                            n_clusters: 
+                            <input type="number" id= "birchNcID" name="birchNc"> <br>
+                        </p>
+                    <!--
+                        <input type="radio" name="dmA" id="naiveBayesID" value="naiveBayes" onclick="dmAclick()">Naive Bayes<br>
+                        <input type="radio" name="dmA" id="dbscanID" value="DBSCAN" onclick="dmAclick()">DBSCAN<br>
+                        <input type="radio" name="dmA" id="dtID" value="decisionTree" onclick="dmAclick()">Decision Tree<br>
+                    -->
+                        <input type="radio" name="dmA" id="kMeansID" value="kMeans" onclick="dmAclick()">k means<br>
+                        <p id="k">
+                            k: 
+                            <input type="number" id= "kInputID" name="kInput" value=2> <br>
+                        </p>
+                        <button type="button" id="applyButtonID" onclick="init()">Apply</button>  
+                    </form>
+                </div>
+                <div id="map" style="height: 80vh"></div>
+                <button type="button" id="resetMapBtnID" onclick="resetMap()">Reset zoom</button>  
+                <div id="pc" style="height: 80vh"></div>
+            </div>
+        </div>
+
+        <div id="footer">
+            <div class="container">
+            </div>
+        </div>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+        <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="js/vendor/d3.min.js"></script>
+        <script src="js/vendor/topojson.v1.min.js"></script>
+        <script src="js/vendor/underscore-min.js"></script>
+        <script src="js/vendor/colorbrewer.js"></script>
+
+        <!--modules js-->
+        <script src="js/kmeans.js"></script>
+        <script src="js/pc.js"></script>
+        <script src="js/map.js"></script>
+        <script src="js/main.js"></script>
+
+    </body>
+</html>
