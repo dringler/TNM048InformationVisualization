@@ -15,6 +15,9 @@
         <link rel="stylesheet" href="css/bootstrap.css">
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/area.css">
+        <link rel="stylesheet" href="css/pc.css">
+        <link rel="stylesheet" href="css/map.css">
         <link rel="stylesheet" href="css/colorbrewer.css">
 
         <!--modules css-->
@@ -46,41 +49,109 @@
             </div>
 
             <!-- Begin page content -->
-            <div class="container">
+            <div class="container" >
                 <!-- row of columns -->
-                <br><br><br>
-                 <div class="input">
-                    <form>
-                        dataset: <br>
-                        <input type="radio" name="dataset" id="datasetSampleID" value="sample" checked>sample<br>
-                        <input type="radio" name="dataset" id="datasetFullID" value="full">full<br>
-                        data mining algorithm: <br>
-                        <input type="radio" name="dmA" id="birchID" value="birch" onclick="dmAclick()" checked>BIRCH<br>
-                        <p id="birch">
-                            threshold: 
-                            <input type="number" id= "birchThID" name="birchTh" value=0.5> <br>
-                            branching_factor: 
-                            <input type="number" id= "birchBfID" name="birchBf" value=50> <br>
-                            n_clusters: 
-                            <input type="number" id= "birchNcID" name="birchNc"> <br>
-                        </p>
-                    <!--
-                        <input type="radio" name="dmA" id="naiveBayesID" value="naiveBayes" onclick="dmAclick()">Naive Bayes<br>
-                        <input type="radio" name="dmA" id="dbscanID" value="DBSCAN" onclick="dmAclick()">DBSCAN<br>
-                        <input type="radio" name="dmA" id="dtID" value="decisionTree" onclick="dmAclick()">Decision Tree<br>
-                    -->
-                        <input type="radio" name="dmA" id="kMeansID" value="kMeans" onclick="dmAclick()">k means<br>
-                        <p id="k">
-                            k: 
-                            <input type="number" id= "kInputID" name="kInput" value=2> <br>
-                        </p>
-                        <button type="button" id="applyButtonID" onclick="init()">Apply</button>  
-                    </form>
+                    <br><br><br>
+                     <div class="input">
+                        <form class="form-inline" role="form">
+
+                            <div class="form-group">
+                                <label for="dataset">dataset:</label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="dataset" id="datasetSampleID" value="sample" checked>sample
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="dataset" id="datasetFullID" value="full">full
+                                </label>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label for="preprocessing">preprocessing:</label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="preprocessing" id="ppNoneID" value="none" checked>none
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="preprocessing" id="ppNormID" value="normalizeData">normalize data
+                                </label>
+                            </div>
+                            <br>
+                            <div class="form-group" >
+                                <label for="algorithm">data mining algorithm:</label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="dmA" id="birchID" value="birch" onclick="dmAclick()" checked>BIRCH
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="dmA" id="kMeansID" value="kMeans" onclick="dmAclick()">k means
+                                </label>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label for="parameters">parameters:</label>
+                                <div id="k">
+                                    <div class="form-group">
+                                        <label for="kParam">k:</label>
+                                    <input type="number" class="form-control" id= "kInputID" name="kInput" placeholder="Enter number of clusters"value=2>
+                                    </div>
+                                </div>
+                                <div id="birch">
+                                    <div class="form-group">
+                                        <label for="threshold">threshold:</label>
+                                            <input type="number" class="form-control" id= "birchThID" name="birchTh" placeholder="Default 0.5" value=0.5>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="branching_factor">branching_factor:</label>
+                                            <input type="number" class="form-control" id= "birchBfID" name="birchBf" placeholder="Default 50"value=50>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="n_clusters">n_clusters:</label>
+                                            <input type="number" class="form-control" id= "birchNcID" name="birchNc"placeholder="Default None">
+                                    </div>
+                                    <!-- <div class="form-group">
+                                        <label for="Dx">distance metric:</label>
+                                            <select class="form-control" id= "birchDx" name="birchNc">
+                                                <option>D0</option>
+                                                <option>D1</option>
+                                                <option>D2</option>
+                                                <option>D3</option>
+                                                <option>D4</option>
+                                                <option>D5</option>
+                                    </div> -->
+                                </div>
+                            </div>
+                            <br>
+
+                 <!--            parameters:
+                            <p id="k">
+                                k: 
+                                <input type="number" id= "kInputID" name="kInput" value=2> <br>
+                            </p>
+                            <p id="birch">
+                                threshold: 
+                                <input type="number" id= "birchThID" name="birchTh" value=0.5> <br>
+                                branching_factor: 
+                                <input type="number" id= "birchBfID" name="birchBf" value=50> <br>
+                                n_clusters: 
+                                <input type="number" id= "birchNcID" name="birchNc"> <br>
+                            </p> -->
+                        <!--
+                            <input type="radio" name="dmA" id="naiveBayesID" value="naiveBayes" onclick="dmAclick()">Naive Bayes<br>
+                            <input type="radio" name="dmA" id="dbscanID" value="DBSCAN" onclick="dmAclick()">DBSCAN<br>
+                            <input type="radio" name="dmA" id="dtID" value="decisionTree" onclick="dmAclick()">Decision Tree<br>
+                        -->
+                            
+                            <button type="button" class="btn btn-default btn-sm" id="applyButtonID" onclick="init()">Apply</button> 
+                            <button type="button" class="btn btn-default btn-sm" id="resetTimeBtnID" onclick="resetTime()">Reset time selection</button>
+                            <button type="button" class="btn btn-default btn-sm" id="resetAttrBtnID" onclick="resetAttrributes()">Reset attribute selection</button>  
+                            <button type="button" class="btn btn-default btn-sm" id="resetMapBtnID" onclick="resetMap()">Reset map zoom</button>  
+                        </form>
+                        <br>
                 </div>
-                <div id="map" style="height: 80vh"></div>
-                <button type="button" id="resetMapBtnID" onclick="resetMap()">Reset zoom</button>  
-                <div id="pc" style="height: 80vh"></div>
+                    <div id="area" style="height: 50vh"></div>
+                    <div id="pc" style="height: 30vh"></div>
+                    <div id="map" style="height: 30vh"></div>
+                    
             </div>
+
         </div>
 
         <div id="footer">
@@ -100,9 +171,12 @@
 
         <!--modules js-->
         <script src="js/kmeans.js"></script>
+        <script src="js/birch.js"></script>
+        <script src="js/area.js"></script>
         <script src="js/pc.js"></script>
         <script src="js/map.js"></script>
         <script src="js/main.js"></script>
+
 
     </body>
 </html>

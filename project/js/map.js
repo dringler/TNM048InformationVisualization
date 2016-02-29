@@ -18,10 +18,10 @@ function map(data) {
 
     var curr_mag = 4;
 
-    var format = d3.time.format.utc("%Y-%m-%dT%H:%M:%S.%LZ");
+    var format = d3.time.format.utc("%Y-%m-%dT%H:%M:%S");
 
     var timeExt = d3.extent(data.map(function (d) {
-        return format.parse(d.time);
+        return format.parse(d.TIMESTAMP);
     }));
 
     var filterdData = data;
@@ -50,8 +50,8 @@ function map(data) {
 
     //Loads geo data
     d3.json("data/world-topo.json", function (error, world) {
-        var countries = topojson.feature(world, world.objects.countries).features;
-        draw(countries);
+        var flow_speed = topojson.feature(world, world.objects.flow_speed).features;
+        draw(flow_speed);
     });
 
     //Calls the filtering function 
@@ -72,11 +72,13 @@ function map(data) {
                     "coordinates": [parseFloat(array[i].lon), parseFloat(array[i].lat)]
                 },
                 "properties": {
-                    "id" : array[i].id,
-                    "time" : array[i].time,
-                    "depth" : array[i].depth,
-                    "mag" : array[i].mag,
-                    "place": array[i].place
+                    // "id" : array[i].id,
+                    "timestamp" : array[i].timestamp,
+                    "ds_reference" : array[i].ds_reference,
+                    "detector_number" : array[i].detector_number,
+                    "flow" : array[i].flow,
+                    "average_speed": array[i].average_speed,
+                    "status": array[i].status
                 }
             }
             data.push(feature);
@@ -86,7 +88,7 @@ function map(data) {
     }
 
     //Draws the map and the points
-    function draw(countries)
+    function draw(flow_speed)
     {
         //draw map
         var country = g.selectAll(".country").data(countries);
