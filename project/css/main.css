@@ -233,6 +233,11 @@ body {
     *zoom: 1;
 }
 
+.form-inline .form-group{
+    margin-left: 0;
+    margin-right: 0;
+}
+
 /* ==========================================================================
    EXAMPLE Media Queries for Responsive Design.
    These examples override the primary ('mobile first') styles.
