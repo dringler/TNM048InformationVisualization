@@ -1,3 +1,4 @@
+var prevClusterRes;
 function pc(data){
 
     var self = this; // for internal d3 functions
@@ -11,7 +12,7 @@ function pc(data){
 
     
     //initialize color scale
-    var color = d3.scale.category20();
+    // var color = d3.scale.category10();
     
     //initialize tooltip
     var div = d3.select("body").append("div")   
@@ -37,7 +38,14 @@ function pc(data){
 
     //     self.data = data;
 
-        // Extract the list of dimensions and create a scale for each.
+       
+        //create scales
+        create_scales();
+
+        draw(null);
+    // });
+    function create_scales(){
+         // Extract the list of dimensions and create a scale for each.
         x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
             //exclude unnecessary dimensions
             return d != "TIMESTAMP" && 
@@ -47,21 +55,36 @@ function pc(data){
                 d != "LEGEND_SUBSIGN" &&
                 d != "PROTOCOL_VERSION" &&
                 d != "TRAFFIC_DIRECTION" && 
+                d != "id" &&
+                d != "X_COORD" && 
+                d != "Y_COORD" && 
 
             (y[d] = d3.scale.linear()
                 .domain(d3.extent(self.data, function(p) {return +p[d];}))
                 .range([height, 0]));
-        }).sort());
-
-        draw();
-    // });
-
-    function draw(){
-
-        var cc = {};
-            self.data.forEach(function(d){
-                cc[d["AVERAGE_SPEED"]] = color(d["AVERAGE_SPEED"]);
         })
+        // .sort()
+        );
+    }
+
+    function draw(clusterResult){
+
+        // var cc = {};
+        //     self.data.forEach(function(d){
+        //         cc[d["id"]] = color(d["id"]);
+        // })
+        var color = d3.scale.category10();
+        var cValue = function(d) {
+            if (clusterResult == null) {
+                return 0;
+            } else {
+                for (var i = 0; i < clusterResult.points.length; i++) {
+                    if (d.id == clusterResult.points[i][0]) { //check id
+                        return clusterResult.assignments[i];
+                    }
+                }
+            }
+        };
 
         // Add grey background lines for context.
         background = svg.append("svg:g")
@@ -74,7 +97,7 @@ function pc(data){
             .on("mousemove", function(d){})
             .on("mouseout", function(){});
 
-        // Add blue foreground lines for focus.
+        // Add foreground lines for focus.
         foreground = svg.append("svg:g")
             .attr("class", "foreground")
             .selectAll("path")
@@ -82,12 +105,13 @@ function pc(data){
             .data(self.data)
             .enter().append("path")
             .attr("d", path)
-            .style("stroke", function(d) {return cc[d.AVERAGE_SPEED];})
+            // .style("stroke", function(d) {return cc[d.id];})
+            .style("stroke", function(d) {return color(cValue(d));})
             .on("mousemove", function(d){
                 div.transition()        
                     .duration(1)      
                     .style("opacity", .9);      
-                div .html(d.AVERAGE_SPEED)  
+                div.html("id:" + d.id + "<br> average speed: " + d.AVERAGE_SPEED + "<br> detector number: " + d.DETECTOR_NUMBER + "<br> flow in: " + d.FLOW_IN + "<br>status: " + d.STATUS )
                     .style("left", (d3.event.pageX + 5) + "px")     
                     .style("top", (d3.event.pageY - 28) + "px");    
             })
@@ -97,10 +121,10 @@ function pc(data){
                     .style("opacity", 0);   
             })
             .on("click", function(d){
-                // var speedArray = [];
-                // speedArray.push(d.AVERAGE_SPEED);
+                var idArray = [];
+                idArray.push(d.id);
                 // sp1.selectDot(countryArray);
-                // pc1.selectLine(d.Country);  
+                pc1.selectLine(d.id);  
                 // map.selectCountry(countryArray);
             });
 
@@ -142,25 +166,45 @@ function pc(data){
             extents = actives.map(function(p) { return y[p].brush.extent(); });
         foreground.style("display", function(d) {
             return actives.every(function(p, i) {
-                if(extents[i][0] <= d[p] && d[p] <= extents[i][1]) {selectedLines.push(d["AVERAGE_SPEED"])}
+                if(extents[i][0] <= d[p] && d[p] <= extents[i][1]) {selectedLines.push(d["id"])}
                 return extents[i][0] <= d[p] && d[p] <= extents[i][1];
             }) ? null : "none";
         });
         // sp1.selectDot(selectedLines);
         // map.selectCountry(selectedLines);
+        map1.filterAttributes(actives, extents);
+
 
     }
+
+    this.updateData = function(newData, clusterRes) {
+        prevClusterRes = clusterRes;
+        svg.selectAll("path").remove();
+        svg.selectAll("g").remove();
+        self.data = newData;
+
+        create_scales();
+        draw(clusterRes);
+
+    };
 
     //method for selecting the pololyne from other components   
     this.selectLine = function(value){
         svg.selectAll("path").style("opacity", function(d) {
-            if (d.AVERAGE_SPEED != value) {return 0.2} 
+            if (d.id != value) {return 0.2} 
              else {return 1};
         })
     };
+
+    this.resetSelections = function(){
+        // svg.selectAll("path").style("opacity", 1);
+        // d3.selectAll(".brush").call(d3.svg.brush().clear());
+        // foreground.style("display", "")
+        this.updateData(data, prevClusterRes);
+    }
     
     //method for selecting features of other components
-    function selFeature(value){
+    function setFeature(value){
         //...
     };
 

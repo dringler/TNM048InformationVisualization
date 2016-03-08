@@ -25,7 +25,7 @@
         
 
     </head>
-    <body onload="dmAclick(); init();">
+    <body onload="init();">
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -56,12 +56,15 @@
                         <form class="form-inline" role="form">
 
                             <div class="form-group">
-                                <label for="dataset">dataset:</label>
+                                <label for="dataset">sample dataset entries:</label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="dataset" id="datasetSampleID" value="sample" checked>sample
+                                    <input type="radio" name="dataset" id="dataset100ID" value="100">100
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="dataset" id="datasetFullID" value="full">full
+                                    <input type="radio" name="dataset" id="dataset1000ID" value="1000" checked>1000
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="dataset" id="dataset10000ID" value="10000">10000
                                 </label>
                             </div>
                             <br>
@@ -76,7 +79,7 @@
                             </div>
                             <br>
                             <div class="form-group" >
-                                <label for="algorithm">data mining algorithm:</label>
+                                <label for="algorithm">clustering algorithm:</label>
                                 <label class="radio-inline">
                                     <input type="radio" name="dmA" id="birchID" value="birch" onclick="dmAclick()" checked>BIRCH
                                 </label>
@@ -87,7 +90,16 @@
                             <br>
                             <div class="form-group">
                                 <label for="parameters">parameters:</label>
-                                <div id="k">
+                                <br>
+                                <label for="areaYvalue">y variable for area chart:</label>
+                                     <select id="areaYvalueID" name="areaYvalue">
+                                      <option value="AVERAGE_SPEED" selected>AVERAGE_SPEED</option>
+                                      <option value="DETECTOR_NUMBER">DETECTOR_NUMBER</option>
+                                      <option value="FLOW_IN">FLOW_IN</option>
+                                      <option value="STATUS">STATUS</option>
+                                    </select>
+
+                                <div id="k" style="display: none;">
                                     <div class="form-group">
                                         <label for="kParam">k:</label>
                                     <input type="number" class="form-control" id= "kInputID" name="kInput" placeholder="Enter number of clusters"value=2>
@@ -102,10 +114,10 @@
                                         <label for="branching_factor">branching_factor:</label>
                                             <input type="number" class="form-control" id= "birchBfID" name="birchBf" placeholder="Default 50"value=50>
                                     </div>
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <label for="n_clusters">n_clusters:</label>
                                             <input type="number" class="form-control" id= "birchNcID" name="birchNc"placeholder="Default None">
-                                    </div>
+                                    </div> -->
                                     <!-- <div class="form-group">
                                         <label for="Dx">distance metric:</label>
                                             <select class="form-control" id= "birchDx" name="birchNc">
@@ -118,6 +130,7 @@
                                     </div> -->
                                 </div>
                             </div>
+                            <br>
                             <br>
 
                  <!--            parameters:
@@ -139,16 +152,19 @@
                             <input type="radio" name="dmA" id="dtID" value="decisionTree" onclick="dmAclick()">Decision Tree<br>
                         -->
                             
-                            <button type="button" class="btn btn-default btn-sm" id="applyButtonID" onclick="init()">Apply</button> 
-                            <button type="button" class="btn btn-default btn-sm" id="resetTimeBtnID" onclick="resetTime()">Reset time selection</button>
-                            <button type="button" class="btn btn-default btn-sm" id="resetAttrBtnID" onclick="resetAttrributes()">Reset attribute selection</button>  
-                            <button type="button" class="btn btn-default btn-sm" id="resetMapBtnID" onclick="resetMap()">Reset map zoom</button>  
+                            <button type="button" class="btn btn-default btn-sm" id="applyButtonID" onclick="runClustering()">Run</button> 
+                             <button type="button" class="btn btn-default btn-sm" id="resetBtnID" onclick="resetSelection()">Reset</button>
+                            <!-- <button type="button" class="btn btn-default btn-sm" id="resetTimeBtnID" onclick="resetTime()">Reset time selection</button>
+                            <button type="button" class="btn btn-default btn-sm" id="resetAttrBtnID" onclick="resetAttributes()">Reset attribute selection</button>   -->
+                           <!--  <button type="button" class="btn btn-default btn-sm" id="resetMapBtnID" onclick="resetMap()">Reset map zoom</button>  --> 
                         </form>
                         <br>
+
                 </div>
-                    <div id="area" style="height: 50vh"></div>
-                    <div id="pc" style="height: 30vh"></div>
-                    <div id="map" style="height: 30vh"></div>
+                <div class="col-md-6" id="map" style="height: 40vh"></div>
+                <div class="col-md-6" id="area" style="height: 40vh"></div>
+                
+                <div id="pc" style="height: 30vh"></div>
                     
             </div>
 
@@ -159,12 +175,13 @@
             </div>
         </div>
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="js/vendor/jquery-1.10.2.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
         <script src="js/vendor/bootstrap.min.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
-        <script src="js/vendor/d3.min.js"></script>
+        <script src="js/vendor/d3.v3.min.js"></script>
+        <script src="js/vendor/d3.geo.projection.v0.min.js"></script>
         <script src="js/vendor/topojson.v1.min.js"></script>
         <script src="js/vendor/underscore-min.js"></script>
         <script src="js/vendor/colorbrewer.js"></script>
@@ -176,7 +193,6 @@
         <script src="js/pc.js"></script>
         <script src="js/map.js"></script>
         <script src="js/main.js"></script>
-
 
     </body>
 </html>
