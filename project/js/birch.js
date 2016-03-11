@@ -11,8 +11,8 @@
     * @param data
     * @param threshold
     * @param branching factor
+    * @param max_nodes
     * @param n clusters
-    // ...
     * @return {Object}
     */
     function birch(dataset, t, bf, max_nodes, n_clusters) {
@@ -31,7 +31,6 @@
         }
         //dimension variables
         keys = d3.keys(data[0]);
-        // console.log(keys);
 
     	//parameters
     	threshold = t; //float, default 0.5 , max size of a cluster
@@ -53,7 +52,6 @@
         root = new CFNode(true);
 
         data.forEach(function(datapoint) {
-            // console.log(datapoint);
             //convert datapoint into vector
             var datapointVector = datapointToVector(datapoint);
             //insert datapoint vector into the tree
@@ -84,7 +82,7 @@
 
     };
     /**
-    * Return an array of array
+    * Convert the data to an array of points
     * @param data
     * @return {Array}
     */
@@ -351,7 +349,7 @@
                 if (nextLeaf != null){
                     nextLeaf.prev_leaf = newNode2;
                 }
-
+                //update leaf node pointer
                 newNode1.prev_leaf = previousLeaf;
                 newNode1.next_leaf = newNode2;
                 newNode2.prev_leaf = newNode1;
@@ -546,7 +544,7 @@
                 }    
             } 
             if(this.child == null) {
-            //INDEX LIST: not required?
+            //INDEX LIST: not used yet
             /*if(this.indexList!=null && e.indexList!=null)
                 this.indexList.addAll(e.indexList);
             else if(this.indexList==null && e.indexList!=null)

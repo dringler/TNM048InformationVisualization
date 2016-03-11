@@ -6,6 +6,10 @@ var visiblePointsAtt = [];
 var visiblePointsTime = [];
 var firstFilter = true;
 
+/**
+ * map function to draw the data points
+ * @param data
+ */
 function map(data) {
     gData = data;
 
@@ -16,10 +20,7 @@ function map(data) {
     var mapDiv = $("#map");
 
     var margin = {top: 20, right: 20, bottom: 20, left: 20};
-    // width = mapDiv.width() - margin.right - margin.left,
-    // height = mapDiv.height() - margin.top - margin.bottom;
-    // var width = 960,
-    // height = 500;
+
     var width = mapDiv.width() - margin.left - margin.right,
     height = mapDiv.height() - margin.top - margin.bottom;
 
@@ -28,13 +29,7 @@ function map(data) {
         .attr("class", "tooltip")               
         .style("opacity", 0);
 
-    // var curr_mag = 4;
-
     var format = d3.time.format.utc("%Y-%m-%d %H:%M:%S");
-
-    // var timeExt = d3.extent(data.map(function (d) {
-    //     return format.parse(d.TIMESTAMP);
-    // }));
 
     //Sets the colormap
     var colors = colorbrewer.Set3[10];
@@ -44,6 +39,7 @@ function map(data) {
             .attr("width", width)
             .attr("height", height)
             .call(zoom);
+
     //fill water blue
     svg.append('rect')
         .attr('width', width)
@@ -69,42 +65,16 @@ function map(data) {
     //Formats the data in a feature collection trougth geoFormat()
     var geoData = {type: "FeatureCollection", features: geoFormat(data)};
 
-
-
      d3.json("data/swe_mun.topojson", function(error, sweden) {
         var mun = topojson.feature(sweden, sweden.objects.swe_mun).features;
         drawMap(mun);
         drawPoints();
     });
 
-    // d3.json('data/buildings.json', function(err, data) {
-    // buildings.selectAll("path")
-    //     .data(data.features)
-    //     .enter().append("path")
-    //     .attr("class", "buildings")
-    //     .attr("d", path);
-    // });
-
-    // d3.json('data/roads.json', function(err, data) {
-    //     roads.selectAll("path")
-    //         .data(data.features)
-    //         .enter().append("path")
-    //         .attr("class", "roads")
-    //         .attr("d", path);
-    // });
-
-    //Loads geo data
-     // d3.json("data/world-topo.json", function (error, world) {
-     //     var radarLocations = topojson.feature(world, world.objects.countries).features;
-     //     draw(radarLocations);
-     // });
-
-    //Calls the filtering function 
-    // d3.select("#slider").on("input", function () {
-    //     filterMag(this.value, data);
-    // });
-
-    //Formats the data in a feature collection
+    /**
+    * formats the data in a feature collection
+    * @param data array
+    */
     function geoFormat(array) {
         //array containing feature objects
         var data = [];
@@ -127,27 +97,16 @@ function map(data) {
                     "status": array[i].STATUS
                 }
             }
-//TAXI TEST
-        //     var feature = {
-        //         "type" : "Feature",
-        //         "geometry": {
-        //             "type": "Point",
-        //             //coordinates: lon, lat
-        //             "coordinates": [parseFloat(array[i].X_COORD), parseFloat(array[i].Y_COORD)]
-        //         },
-        //         "properties": {
-        //             "id" : array[i].id,
-        //             "timestamp" : array[i].TIMESTAMP,
-        //             "ds_reference" : array[i].HIRED,
-        //         }
-        //     }
             data.push(feature);
         });
 
         return data;
     }
 
-    //Draws the map and the points
+    /**
+    * draws the map
+    * @param data topojson object
+    */
     function drawMap(mun)
     {
         //draw map
@@ -159,6 +118,10 @@ function map(data) {
                 .style("fill", "grey")
                 .style("stroke", "black");
     };
+
+    /**
+    * draws the data points in the map
+    */
     function drawPoints(){
 
         //draw point        
@@ -194,27 +157,16 @@ function map(data) {
             }
     };
 
-    // //Filters data points according to the specified magnitude
-    // function filterStatus(value) {
-    //     gStatus = value;
-    //     svg.selectAll("circle")
-    //         .style("opacity", function(d){
-    //             if (value > d.properties.status) {return 0}
-    //             else {return 1};
-    //         })
-    // }
 
-    //filter data point based on selected values in PC
+    /**
+    * filter data points based on selected values in PC
+    * @param actives: array of active attribute selections
+    * @param extents: attribute values (min and max) for active attribute
+    */
     this.filterAttributes = function(actives, extents) {
-        // if (firstFilter == true) {
-        //     visiblePointsTime = [];
-        //     firstFilter = false;
-        // }
         for (var a=0; a<actives.length; a++) {
             var lowest = extents[a][0];
             var highest = extents[a][1];
-            // console.log(actives[a]);
-            // console.log(lowest, highest);
             svg.selectAll("circle").style("opacity", function(d) {
                 var dotvalue = d.properties[actives[a].toLowerCase()];
                 if ((dotvalue < lowest) || (dotvalue > highest)) {
@@ -243,16 +195,14 @@ function map(data) {
         }
     }
     
-    //Filters data points according to the specified time window
+    /**
+    * filters data points according to the specified time window
+    * @param value: array of time window (min, max)
+    */
     this.filterTime = function (value) {
-        // if (firstFilter == true) {
-        //     visiblePointsAtt = [];
-        //     firstFilter = false;
-        // }
         gStartTime = value[0].getTime();
         gEndTime = value[1].getTime();
-        // filterObject.time.startTime = value[0].getTime();
-        // filterObject.time.endTime = value[1].getTime();
+        //show/hide data points
         svg.selectAll("circle").style("opacity", function(d){
             var date = new Date(d.properties.timestamp);
                 if (value[0].getTime() <= date.getTime() && date.getTime() <= value[1].getTime()) {
@@ -280,7 +230,10 @@ function map(data) {
         })
     };
 
-
+    /**
+    * update the data in the map
+    * @param newData
+    */
     this.updateData = function(newData) {
         data = newData;
         var geoData = {type: "FeatureCollection", features: geoFormat(newData)};
@@ -290,88 +243,60 @@ function map(data) {
 
     }
 
-    //Calls k-means function and changes the color of the points  
+    /**
+    * Calls k-means or BIRCH clustering function and changes the color of the data points in the map
+    * @param userSelection
+    */
     this.cluster = function (userSelection) {
-        // console.log("data");
-        // console.log(data)
         var clusterRes;
         var color = d3.scale.category10();
         var cValue = function(d) {
             for (var i = 0; i < clusterRes.points.length; i++) {
-                    if (d.properties.id == clusterRes.points[i][0]) { //check id
-                        return clusterRes.assignments[i];
-                    }
+                if (d.properties.id == clusterRes.points[i][0]) { //check id
+                    return clusterRes.assignments[i];
                 }
-
-            // return d.properties.assignment;
+            }
         };
         //reset global data array with filtered data
         gData = [];
         //add all data to the global data array which is not filtered out 
         for (j=0; j < data.length; j++) {
             var dTime = new Date(data[j].TIMESTAMP);
-            // var dMag = data[j].mag;
-            //make data array with selected values
-            // if ((gStartTime == 0 || dTime.getTime() >= gStartTime) && 
-            //         (gEndTime == 0 || dTime.getTime() <= gEndTime) 
-            //         // && 
-            //         // (dMag >= gStatus || gStatus == 0) 
-            //         ) {
                 gData.push(data[j]);
-            // }
         }
         if (userSelection.DMa == 0) { //BIRCH
             //input: data, threshold, branching_factor, max_nodes, n_clusters
             var birchRes = birch(gData, userSelection.DMp[0], userSelection.DMp[1], 0, userSelection.DMp[2]);
-            // console.log("birchRes");
-            // console.log(birchRes);
             clusterRes = birchRes;
-
-
-
         } else { //kmeans
             //get k value
             var k = document.getElementById('kInputID').value;
             var kmeansRes = kmeans(gData,k);
             clusterRes = kmeansRes;
         }  
-
-            for (j=0; j<geoData.features.length; j++) {
-                for (m=0; m<clusterRes.points.length; m++) {
-                    //check if ID property is the same kmeansRes.points[m][ID POSITION in kmeansRes])
-                    if (geoData.features[j].properties.id == clusterRes.points[m][0]) {
-                        geoData.features[j].properties.assignment = clusterRes.assignments[m];
-                    }
+        //add cluster assignments to the geoData object
+        for (j=0; j<geoData.features.length; j++) {
+            for (m=0; m<clusterRes.points.length; m++) {
+                //check if ID property is the same kmeansRes.points[m][ID POSITION in kmeansRes])
+                if (geoData.features[j].properties.id == clusterRes.points[m][0]) {
+                    geoData.features[j].properties.assignment = clusterRes.assignments[m];
                 }
             }
-            svg.selectAll("circle").style("fill", function(d) {
-                return color(cValue(d));
-            })
-             
-        
+        }
+        //color the data points in the map depending on the cluster
+        svg.selectAll("circle").style("fill", function(d) {
+            return color(cValue(d));
+        })                    
     return clusterRes;
     };
 
-    //Zoom and panning method
+    /**
+    * zoom and panning method
+    */
     function move() {
-
         var t = d3.event.translate;
         var s = d3.event.scale;
-
         zoom.translate(t);
         g.style("stroke-width", 1 / s).attr("transform", "translate(" + t + ")scale(" + s + ")");
     }
-
-    // //Prints features attributes
-    // function printInfo(value) {
-    //     var elem = document.getElementById('info');
-    //     elem.innerHTML = "Place: " + value["place"] + " / Depth: " + value["depth"] + " / Magnitude: " + value["mag"] + "&nbsp;";
-    // }
-
-    // this.resetZoom = function() {
-    //     // d3.geo.mercator()
-    //     //     .center([8.25, 56.8])
-    //     //     .scale(700);
-    //         console.log("RESET ZOOM");
-    // }
 }

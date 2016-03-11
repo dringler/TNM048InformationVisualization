@@ -11,11 +11,8 @@ var areaYparameter = 'AVERAGE_SPEED';
 
 function area(data) {
     data = data;
-    // console.log("data");
-    // console.log(data);
     var areaDiv = $("#area");
 
-    // var margin = {top: 100, right: 40, bottom: 100, left: 40},
     var margin = {top: 20, right: 20, bottom: 100, left: 20};
 
     margin2 = {top: areaDiv.height() - 70, right: 40, bottom: 30, left: 20},
@@ -57,28 +54,27 @@ function area(data) {
             .attr("width", width)
             .attr("height", height);
 
-
-    
-
     //create scales for both charts
     create_scales();
     //draw data, axis & brush
     draw(data);
 
+    /**
+    * draw the area chart
+    * @param data
+    * @param clusterResult
+    */
     function draw(data, clusterResult) {
-
         //color function for the clustering result
         var cValue = function(d) {
             if (clusterResult == null) {
                 return 0;
             } else {
-                // for (var j = 0; j < d.length; j++) {
-                    for (var i = 0; i < clusterResult.points.length; i++) {
-                        if (d.id == clusterResult.points[i][0]) { //check id
-                            return clusterResult.assignments[i];
-                        }
+                for (var i = 0; i < clusterResult.points.length; i++) {
+                   if (d.id == clusterResult.points[i][0]) { //check id
+                        return clusterResult.assignments[i];
                     }
-                // }
+                }
             }
         };
 
@@ -118,9 +114,7 @@ function area(data) {
             .datum(data)
             .attr("clip-path", "url(#clip)")
             .attr("d", area)
-            .style("fill", "steelblue")
-            // .style("fill", function(d) {return color(cValue(d));})
-            ;
+            .style("fill", "steelblue");
     
         //Appends the x axis 
         focus.append("g")
@@ -152,19 +146,12 @@ function area(data) {
             .selectAll("rect")
             .attr("y", -6)
             .attr("height", height2 + 7);
-
-        // svg.selectAll("g")
-        //     .data(data)
-        //     .enter()
-        //     .append("path")
-        //     .attr("class", "area")
-        //     .attr("d", area)
-        //     .attr("fill", function(d) {return color(cValue(d));});
-
     }
 
     
-    
+    /**
+    * create the scales of both charts
+    */
     function create_scales(){
         //Initializes the axis domains for the big chart
         x.domain(d3.extent(data.map(function(d){return new Date(d.TIMESTAMP)})));
@@ -173,7 +160,10 @@ function area(data) {
         x2.domain(x.domain());
         y2.domain(y.domain());
     }
-    //Method for brushing
+    
+    /**
+    * brushing method
+    */
     function brush() {
         x.domain(brush.empty() ? x2.domain() : brush.extent());
         focus.select("path").attr("d", area);
@@ -181,8 +171,14 @@ function area(data) {
 
         //filter dots based on selected time range
         map1.filterTime(brush.extent());
-        // map1.cluster();
     }
+
+    /**
+    * update the data in the area chart
+    * @param newData
+    * @param clusterResult
+    * @ yParam
+    */
     this.updateData = function(newData, clusterResult, yParam) {
         data = newData;
         prevClusterResult = clusterResult;
@@ -195,13 +191,11 @@ function area(data) {
         draw(data, clusterResult);
 
     }
+    
+    /**
+    * reset the time selection
+    */
     this.resetTimeSelection = function(){
-        // brush.clear();
-        // svg.selectAll("rect.extent").remove();
-        // svg.selectAll('.x brush').call(brush);
-        // d3.selectAll(".brush").call(brush.clear());
-
         this.updateData(data,prevClusterResult,areaYparameter);
-        
     }
 }

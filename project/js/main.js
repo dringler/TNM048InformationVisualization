@@ -28,7 +28,7 @@ function init() {
 	d3.json("php/data_sample_1000.php", function (data) {
 		data.forEach(function(d) {
 			d["id"] = +gID;
-			d["TIMESTAMP"] = new Date(d.TIMESTAMP);
+			d["TIMESTAMP"] = new Date(d.TIMESTAMP.replace("-", " ", "g"));
 			d["DS_REFERENCE"] = d.DS_REFERENCE;
 			d["DETECTOR_NUMBER"] = +d.DETECTOR_NUMBER;
 			d["X_COORD"] = +d.X_COORD;
@@ -44,24 +44,6 @@ function init() {
 		map1 = new map(data);
 	});
 	previousUserSelection = currentUserSelection;
-
-// //TAXI TEST
-// 	d3.csv('data/taxi_sthlm_march_2013_sample.csv', function(data) {
-// 		data.forEach(function(d) {
-// 			d["id"] = +d.id;
-// 			d["TIMESTAMP"] = new Date(d.date);
-// 			d["HIRED"] = d.hired;
-// 			d["X_COORD"] = +d.x_coord;
-// 			d["Y_COORD"] = +d.y_coord;
-// 		})
-// 		console.log("TAXI DATA");
-// 		console.log(data);
-
-// 		// pc1 = new pc(data);
-// 		// area1 = new area(data);
-// 		map1 = new map(data);
-
-// 	});
 }
 /**
  * run the clustering algorithm
@@ -71,19 +53,10 @@ function runClustering() {
 	//check if user selection changed for dataset or preprocessing
 	var currentUserSelection = getUserSelection();
 
-	//check if dataset parameters changed: dataset, preprocessing, timeSelection, attributeRangeSelection
-	//...
-
-	if (currentUserSelection.datasetSize != previousUserSelection.datasetSize ||
-		 currentUserSelection.normalizeDataset != previousUserSelection.normalizeDataset) {
-		reloadCharts();
-	reloadChartsRequired = true;
-	}
-
 	//select php script to get dataset based on user selection
 	var phpscript = "";
-	//100 entries
-	if (currentUserSelection.datasetSize == 100) {
+	
+	if (currentUserSelection.datasetSize == 100) { //100 entries
 		if ( currentUserSelection.normalizeDataset == true) {
 			phpscript = "php/data_sample_100_normalized.php";
 		} else {
@@ -109,7 +82,7 @@ function runClustering() {
 		gID = 0;
 		data.forEach(function(d) {
 			d["id"] = +gID;
-			d["TIMESTAMP"] = new Date(d.TIMESTAMP);
+			d["TIMESTAMP"] = new Date(d.TIMESTAMP.replace("-", " ", "g"));
 			d["DS_REFERENCE"] = d.DS_REFERENCE;
 			d["DETECTOR_NUMBER"] = +d.DETECTOR_NUMBER;
 			d["X_COORD"] = +d.X_COORD;
@@ -127,14 +100,20 @@ function runClustering() {
 		if (currentUserSelection.DMa == 0) {
 			//apply BIRCH
 			map1.updateData(gData);
+			var startTime = new Date().getTime();
 			clusterRes = map1.cluster(currentUserSelection);
+			console.log(new Date().getTime() - startTime);
+			console.log("BIRCH performance in ms with " + currentUserSelection.datasetSize + " entries.");
 			pc1.updateData(gData, clusterRes);
 			area1.updateData(gData, clusterRes, currentUserSelection.areaYparameter);
 		} else {
 			//apply Kmeans
 			map1.updateData(gData);
 			// kmeansRes = map1.clusterKmeans();
+			var startTime = new Date().getTime();
 			clusterRes = map1.cluster(currentUserSelection);
+			console.log(new Date().getTime() - startTime);
+			console.log("Kmeans performance in ms with " + currentUserSelection.datasetSize + " entries.");
 			pc1.updateData(gData, clusterRes);
 			area1.updateData(gData, clusterRes, currentUserSelection.areaYparameter);
 		}
@@ -158,8 +137,6 @@ function getUserSelection() {
 	//create variables for return object
 	var DMa; //data mining algorithm, 0:BIRCH, 1:kMeans
 	var DMp = []; //data mining parameters
-	// var selectedTimeRange = []; //selected time range
-	// var selectedAttributeRanges = []; //selected attribute ranges
 	//get user selection
 	var dataset100 = document.getElementById('dataset100ID').checked;
 	var dataset1000 = document.getElementById('dataset1000ID').checked;
@@ -195,8 +172,6 @@ function getUserSelection() {
 	userSelection.areaYparameter = areaYparameter;
 	userSelection.DMa = DMa;
 	userSelection.DMp = DMp;
-	// userSelection.selectedTimeRange = selectedTimeRange;
-	// userSelection.selectedAttributeRanges = selectedAttributeRanges;
 
 	return userSelection;
 }
